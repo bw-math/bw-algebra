@@ -62,14 +62,15 @@ def fraction():
 
 ## 2: algebraic expression functions
 
-def linear_expression(var = None, function = None):
-    ''' returns a linear expression string
+def identity(var = None):
+    return variable() if var is None else var
+
+def linear_expression(var = None, function = identity):
+    ''' returns a linear expression string, a * f(x) + b
     '''
 
-    # generate random variable if nothing is passed
-    var = variable() if var is None else var
-    # apply function to variable if one is passed in
-    func = var if function is None else function(var)
+    # apply function to variable
+    func = function(var)
 
     a = coefficient()
     b = coefficient()
@@ -77,66 +78,56 @@ def linear_expression(var = None, function = None):
 
     return f"{a} * {func} {op} {b}"
 
-        
-def quadratic_expression(var = None, function = None):
-    ''' returns a quadratic expression string: a * x ^ 2 + b * x + c
-    '''
 
-    # generate random variable if nothing is passed
-    var = variable() if var is None else var
-    # apply function to variable if one is passed in
-    func = var if function is None else function(var)
-
-    quad_term = f"{func}^2"
-    linear_term = linear_expression(func)
-    op = sign()
-
-    return f"{quad_term} {op} {linear_term}"
-
-
-def square_root_expression(var = None, function = None):
+def square_root_expression(var = None, function = identity):
     ''' returns a square root expression string
     '''
-    
-    # generate random variable if nothing is passed
-    var = variable() if var is None else var
-    # apply function to variable if one is passed in
-    func = var if function is None else function(var)
+
+    # apply function to variable
+    func = function(var)
 
     return f"sqrt({func})"
 
 
-def power_expression(var = None, function = None):
+def power_expression(var = None, function = identity):
     ''' returns an exponential expression string
     '''
     
-    # generate random variable if nothing is passed
-    var = variable() if var is None else var
-    # apply function to variable if one is passed in
-    func = var if function is None else function(var)
+    # apply function to variable
+    func = function(var)
 
     exp = exponent()
 
     return f"{func}^{exp}"
 
 
-def log_expression(var = None, function = None):
+def log_expression(var = None, function = identity):
     ''' returns a log expression string
     '''
 
-    # generate random variable if nothing is passed
-    var = variable() if var is None else var
-    # apply function to variable if one is passed in
-    func = var if function is None else function(var)
+    func = function(var)
     
     b = base()
     
     return f"log_{b}({func})"
      
+def quadratic_expression(var = None, function = identity):
+    ''' returns a quadratic expression string: a * f(x) ^ 2 + b * f(x) + c
+    '''
+
+    # apply function to variable
+    func = function(var)
+
+    # generate quadratic in func
+    quad_term = f"{func}^2"
+    linear_term = linear_expression(func)
+    op = sign()
+
+    return f"{quad_term} {op} {linear_term}"
 
 ## 3: algebraic equation function
    
-def equals(expression):
+def equation(expression = identity):
     ''' pass in an algebraic expression (function) and set it equal to a number!
     '''
 
@@ -148,14 +139,15 @@ if __name__ == "__main__":
     # The script entrypoint. This is where everything starts!
 
     # Create the questions
-        # NOTE: a function is being passed into a function here, i.e. f(g(x)) or "composition".
-        #       Notice the inner function isn't suffixed with "()", so it is not called.
-        #       Instead, the "name" of the function is being passed in the "equals" function.
-    q1 = equals(quadratic_expression)
-        # NOTE: using an anoynmous "lambda function" to override default argument in the inner
-        #       function. This is like a triple composition! f(g(h(x)))! Oh my!
-    q2 = equals(lambda: square_root_expression(function = linear_expression))
-    q3 = equals(lambda: log_expression(function = power_expression))
+    # NOTE: a function is being passed into a function here, i.e. f(g(x)) or *composition*.
+    #       Notice the inner function isn't suffixed with "()", so it is not called.
+    #       Instead, the "name" of the function is being passed into the "equation" function.
+    q1 = equation(quadratic_expression)
+    # NOTE: using an anoynmous "lambda function" to override default argument in the inner
+    #       function. This is like a triple composition! f(g(h(x)))! Oh my!
+    q2 = equation(lambda: square_root_expression(function = linear_expression))
+    q3 = equation(lambda: log_expression(function = power_expression))
+    q4 = equation(lambda: log_expression(function=quadratic_expression))
 
     print("THE FINAL EXAM \n\n")
 
@@ -167,8 +159,9 @@ if __name__ == "__main__":
 
     print("\t 1. "  + q1 + "\n" )
 
-    print("\t 2. " + equals(lambda: square_root_expression(function = linear_expression)) + "\n")
+    print("\t 2. " + q2 + "\n")
 
-    print("\t 3. " + equals(lambda: log_expression(function = power_expression))+ "\n")
+    print("\t 3. " + q3 + "\n")
 
+    print("\t 4. " + q4 + "\n")
 
