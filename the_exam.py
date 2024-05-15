@@ -134,6 +134,17 @@ def equals(expression):
 # THE EXAM
 
 if __name__ == "__main__":
+    # The script entrypoint. This is where everything starts!
+
+    # Create the questions
+        # NOTE: a function is being passed into a function here, i.e. f(g(x)) or "composition".
+        #       Notice the inner function isn't suffixed with "()", so it is not called.
+        #       Instead, the "name" of the function is being passed in the "equals" function.
+    q1 = equals(quadratic_expression)
+        # NOTE: using an anoynmous "lambda function" to override default argument in the inner
+        #       function. This is like a triple composition! f(g(h(x)))! Oh my!
+    q2 = equals(lambda: square_root_expression(function = linear_expression))
+    q3 = equals(lambda: log_expression(function = power_expression))
 
     print("THE FINAL EXAM \n\n")
 
@@ -143,7 +154,7 @@ if __name__ == "__main__":
 
     print("Part 2: Solve the following equations using any method you choose. \n \n")
 
-    print("\t 1. "  + equals(quadratic_expression) + "\n" )
+    print("\t 1. "  + q1 + "\n" )
 
     print("\t 2. " + equals(lambda: square_root_expression(function = linear_expression)) + "\n")
 
