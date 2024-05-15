@@ -1,3 +1,14 @@
+# this is a line comment! it doesn't affect the code! 
+# it just helps the reader understand what's going on!
+# line comments are typically reserved for quick explanations!
+''' this is a block comment! it doesn't affect the code! 
+take note! i don't have to prefix every line with the triple comma!
+a block comment exists until you close the triple comma!
+block comments are typically reserved for function headings and 
+module descriptions! they are meant to be higher level and occupy
+more space!
+'''
+
 import random 
 
 # CONSTANTS
