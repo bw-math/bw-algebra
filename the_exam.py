@@ -16,11 +16,13 @@ import random
 ##############################################
 
 operations = ["-", "+"]
-variables = [ "x", "y", "z"]
-coefficients = [ str(x + 1) for x in range(25) ]
-solutions = [ str(x + 1) for x in range(10) ]
+variables = [ "x", "y", "z", "✀", "✈", "🂡", "🀎", "Δ", "Ψ", "Ω", "β", "ω"]
+coefficients = [ str(x) for x in range(1, 26) ]
+solutions = [ str(x) for x in range(1, 11) ]
+squares = [ str(i*i) for i in range(1, 11) ]
 bases = [ "e", "10", "2", "4", "7" ]
 exponents = [ "2", "3", "4", "5", "6", "7" ]
+trigs = [ "sin", "cos", "tan" ]
 fractions = [ "(1/2)", "(1/3)", "(1/4)", "(1/5)" ]
 
 
@@ -36,16 +38,10 @@ def operation():
     return random.choice(operations)
 
 
-def coefficient():
+def coefficient(limit = 25):
     ''' returns a random numeric string between "1" and "25".
     '''
-    return random.choice(coefficients)
-
-
-def solution(): 
-    ''' returns a random numeric string between "1" and "10"
-    '''
-    return random.choice(solutions)
+    return random.choice([ str(x) for x in range(1, limit + 1) ])
 
 
 def variable():
@@ -70,6 +66,16 @@ def fraction():
     ''' return a random fraction string from the choices "1/2", "1/3", "1/4", "1/5"
     '''
     return random.choice(fractions)
+
+def trig():
+    ''' returns a random string from the choices: "sin", "tan", "cos"
+    '''
+    return random.choice(trigs)
+
+def square():
+    ''' returns a random square between 1^2 and 10^2
+    '''
+    return random.choice(squares)
 
 ##############################################
 ## 2: algebraic expression functions
@@ -138,6 +144,20 @@ def log_expression(var = None, function = identity, b = None, parenthesis = Fals
         return f"({res})"
     return res
 
+def trig_expression(var = None, function = identity, ratio = None, parenthesis = False):
+    ''' returns a trig expression string
+    '''
+
+    func = function(var)
+
+    tr = trig() if ratio is None else ratio
+
+    res = f"{tr}({func})"
+
+    if parenthesis:
+        return f"({res})"
+    return res
+
 ##############################################
 ### b: two place expressions
 ##############################################
@@ -164,13 +184,9 @@ def operation_expression(var = None, function_1 = identity, function_2 = identit
 def linear_expression(var = None, function = identity, parenthesis = False):
     ''' returns a linear expression string, a * f(x) + b
     '''
-
     res = operation_expression(
         var, 
-        lambda x: scalar_expression(
-            var = x,
-            function = function
-        ), 
+        function, 
         lambda x: coefficient()
     )
 
@@ -183,13 +199,22 @@ def quadratic_expression(var = None, function = identity, parenthesis = False):
     ''' returns a quadratic expression string: a * f(x) ^ 2 + b * f(x) + c
     '''
 
+    var = identity(var)
+
     res =  operation_expression(
         var,
         lambda x: power_expression(
             var = x, 
+            function = function, 
             exp = 2
         ),
-        linear_expression
+        lambda x: linear_expression(
+            var = x, 
+            function = lambda y: scalar_expression(
+                y, 
+                function = function
+            )
+        )
     )
     
     if parenthesis:
@@ -199,14 +224,13 @@ def quadratic_expression(var = None, function = identity, parenthesis = False):
 
 ## 3: algebraic equation function
    
-def equation(expression = identity, sol = None):
+def equation(expression = identity, solution = None, random_limit = 25):
     ''' pass in an algebraic expression (function) and set it equal to a number!
     '''
-
-    if sol is None:
-        return expression() + " = " + solution()
-    return expression() + " = " + sol
     
+    if solution is None:
+        return expression() + " = " + coefficient(random_limit)
+    return expression() + " = " + solution
 # THE EXAM
 
 if __name__ == "__main__":
@@ -215,7 +239,7 @@ if __name__ == "__main__":
     print("THE FINAL EXAM \n\n")
     
     ## PART 1: SIMPLICATION
-    ### Question 1
+    ### Question 1.1
     q1 = operation_expression(
         var = identity(), 
         op = "*",
@@ -228,7 +252,7 @@ if __name__ == "__main__":
             parenthesis = True
         ),
     )
-    ### Question 2
+    ### Question 1.2
     q2 = operation_expression(
         var = identity(), 
         op = "*",
@@ -242,7 +266,7 @@ if __name__ == "__main__":
             parenthesis = True
         )
     )
-    ### Question 3
+    ### Question 1.3
     q3  = operation_expression(
         var = identity(),
         op = "/",
@@ -255,7 +279,7 @@ if __name__ == "__main__":
             parenthesis = True
         )
     )
-    ### Question 4
+    ### Question 1.4
     q4 = power_expression(
         var = identity(),
         function = lambda y: power_expression(
@@ -263,15 +287,124 @@ if __name__ == "__main__":
             parenthesis = True
         )
     )
+    ### Question 1.5
+    q5 = operation_expression(
+        var = identity(),
+        function_1 = lambda y: linear_expression(
+            y, 
+            function = scalar_expression,
+            parenthesis = True
+        ),
+        function_2 = lambda y: linear_expression(
+            y, 
+            function = scalar_expression,
+            parenthesis = True
+        ),
+        op = "*"
+    )
+    ### Question 1.6
+    q6 = operation_expression(
+        var = identity(),
+        function_1 = lambda y: linear_expression(
+            y,
+            parenthesis = True
+        ),
+        function_2 = lambda y: power_expression(
+            y, 
+            function = lambda x: linear_expression(
+                x, 
+                parenthesis = True
+            ),
+            exp = 2,
+            parenthesis = True
+        ),
+        op = "*"
+    )
     
     print("Part 1: Choose 3 of the 6 following problems to complete. Simplify each expression you choose using any method. \n \n")
     print("\t 1. " + q1 + "\n")
     print("\t 2. " + q2 + "\n")
     print("\t 3. " + q3 + "\n")
     print("\t 4. " + q4 + "\n")
-    print("\t TODO: two more! \n\n") 
+    print("\t 5. " + q5 + "\n")
+    print("\t 6. " + q6 + "\n")
     
+    ## PART 2: GRAPHING
+    ### Question 2.1
+    q1 = equation(
+        lambda: linear_expression(
+            "x",
+            function = scalar_expression
+        ),
+        "y"
+    )
+    ### Question 2.2
+    q2 = equation(
+        lambda: operation_expression(
+            function_1 = lambda y: power_expression(
+                "x",
+                exp = 2
+            ),
+            function_2 = lambda y: power_expression(
+                "y",
+                exp = 2
+            ),
+            op = "+"
+        ), 
+        square()
+    )
+    ### Question 2.3
+    q3 = equation(
+        lambda: scalar_expression(
+            "x",
+            function = lambda y: power_expression(
+                y, 
+                function = lambda z: operation_expression(
+                    z,
+                    function_1 = identity,
+                    function_2 = lambda p: coefficient(5),
+                    op = "-",
+                    parenthesis = True
+                ),
+                exp = 2
+            ),
+            a = coefficient(5)
+        ),
+        "y"
+    )
+    q4 = equation(
+        lambda: operation_expression(
+            function_1 = lambda y: power_expression(
+                "x",
+                function = lambda z: operation_expression(
+                    z, 
+                    function_1 = identity,
+                    function_2 = lambda p: coefficient(10),
+                    op = "/",
+                    parenthesis = True
+                ),
+                exp = 2
+            ),
+            function_2 = lambda y: power_expression(
+                "y",
+                function = lambda z: operation_expression(
+                    z, 
+                    function_1 = identity,
+                    function_2 = lambda p: coefficient(10),
+                    op = "/",
+                    parenthesis = True
+                ),
+                exp = 2
+            ),
+            op = "+"
+        ),
+        "1"
+    )
     print("Part 2: Choose 3 of the following 6 problems to complete. Graph each function on the x-y plane as accurately as possible. \n \n")
+    print("\t 1. " + q1 + "\n")
+    print("\t 2. " + q2 + "\n")
+    print("\t 3. " + q3 + "\n")
+    print("\t 4. " + q4 + "\n")
     print("\t TODO \n \n")
 
     ## PART 3: SOLUTION
@@ -298,6 +431,12 @@ if __name__ == "__main__":
         ),
         coefficient()
     )
+    q6 = equation(
+        lambda: trig_expression(
+            function = scalar_expression
+        ),
+        str(round(random.random(), 2))
+    )
 
     print("Part 3: Choose 3 of the 6 following problems to complete. Solve each equation you choose using any method. \n \n")
     print("\t 1. " + q1 + "\n" )
@@ -305,6 +444,6 @@ if __name__ == "__main__":
     print("\t 3. " + q3 + "\n")
     print("\t 4. " + q4 + "\n")
     print("\t 5. " + q5 + "\n")
-    print("\t TODO: one more! \n\n") 
+    print("\t 6. " + q6 + "\n") 
 
 
