@@ -334,7 +334,10 @@ if __name__ == "__main__":
     q1 = equation(
         lambda: linear_expression(
             "x",
-            function = scalar_expression
+            function = lambda x: scalar_expression(
+                x,
+                a = coefficient(5)
+            )
         ),
         "y"
     )
@@ -433,7 +436,10 @@ if __name__ == "__main__":
     )
     q6 = equation(
         lambda: trig_expression(
-            function = scalar_expression
+            function = lambda x: scalar_expression(
+                x,
+                a = coefficient(10)
+            )
         ),
         str(round(random.random(), 2))
     )
