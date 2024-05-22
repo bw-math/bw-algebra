@@ -144,6 +144,20 @@ def log_expression(var = None, function = identity, b = None, parenthesis = Fals
         return f"({res})"
     return res
 
+def exp_expression(var =None, function = identity, b = None, parenthesis = False):
+    ''' returns an exponential expression string
+    '''
+    
+    func = function(var)
+
+    b = base() if b is None else b
+
+    res = f"{b}^{func}"
+
+    if parenthesis: 
+        return f"({res})"
+    return res
+
 def trig_expression(var = None, function = identity, ratio = None, parenthesis = False):
     ''' returns a trig expression string
     '''
@@ -375,6 +389,7 @@ if __name__ == "__main__":
         ),
         "y"
     )
+    ### Question 2.4
     q4 = equation(
         lambda: operation_expression(
             function_1 = lambda y: power_expression(
@@ -403,12 +418,37 @@ if __name__ == "__main__":
         ),
         "1"
     )
+    ### Question 2.5
+    q5 = equation(
+        lambda: exp_expression("x"),
+        "y"
+    )
+    ### Question 2.6
+    q6 = equation(
+        lambda: 
+            scalar_expression(
+                function = lambda x: power_expression(
+                    x,
+                    function = lambda y: operation_expression(
+                        y,
+                        function_1 = identity,
+                        function_2 = lambda z: coefficient(5),
+                        parenthesis = True
+                    ),
+                    exp = 3
+                ),
+                a = coefficient(5)
+            ),
+        "y"
+    )
+
     print("Part 2: Choose 3 of the following 6 problems to complete. Graph each function on the x-y plane as accurately as possible. \n \n")
     print("\t 1. " + q1 + "\n")
     print("\t 2. " + q2 + "\n")
     print("\t 3. " + q3 + "\n")
     print("\t 4. " + q4 + "\n")
-    print("\t TODO \n \n")
+    print("\t 5. " + q5 + "\n")
+    print("\t 6. " + q6 + "\n")
 
     ## PART 3: SOLUTION
     q1 = equation(quadratic_expression)
